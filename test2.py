@@ -119,6 +119,27 @@ def test2():
             print(u["name"])
 
 
+print()
+
+
+def test3():
+    print()
+    print("----- Test 3 -----")
+    print()
+
+    prices = [123, 3, 23, 6475, 58, 89, 45, 34, 87,
+              34, -12, 23, 123, -23, -123, 0, 123, 0, -29, 10]
+
+    greatest = prices[0]
+
+    for p in prices:
+        if(p > greatest):
+            greatest = p
+
+    print(f"The highest price is ${greatest}")
+
+
 start_tests()
 test1()
 test2()
+test3()

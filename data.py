@@ -104,7 +104,7 @@ mock_data = [
     {
         "id": "11",
         "title": "Kingdom Hearts III",
-        "genre": "Fight",
+        "genre": "Adventure",
         "console": "PlayStation 4",
         "price": 75.00,
         "stock": 5,
