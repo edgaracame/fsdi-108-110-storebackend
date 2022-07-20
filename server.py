@@ -1,7 +1,8 @@
-from flask import Flask
+from flask import Flask, request
 from about import me
 from data import mock_data
 import json
+import random
 
 app = Flask("server")
 
@@ -38,6 +39,16 @@ def products():
     return json.dumps(mock_data)
 
 
+@app.post("/api/products")
+def save_product():
+    product = request.get_json()
+
+    mock_data.append(product)
+    product["id"] = str(random.randint(1, 123456789))
+
+    return json.dumps(product)
+
+
 @app.get("/api/products/<id>")
 def get_product_by_id(id):
     for m in mock_data:
@@ -71,6 +82,21 @@ def get_categories():
         if not m["genre"] in genres:
             genres.append(m["genre"])
     return json.dumps(genres)
+
+
+@app.get("/api/count_products")
+def get_products_count():
+    count = len(mock_data)
+    return json.dumps(f"There are {count} products in the catalog")
+
+
+@app.get("/api/search/<text>")
+def get_products_by_title(text):
+    results = []
+    for m in mock_data:
+        if(text.lower() in m["title"].lower()):
+            results.append(m)
+    return json.dumps(results)
 
 
 app.run(debug=True)

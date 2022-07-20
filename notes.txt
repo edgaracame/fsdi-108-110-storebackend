@@ -9,6 +9,8 @@ python -m pip install virtualenv
 # created a virtual env
 python -m venv venv
 
+# install flask
+python -m pip install flask
 
 # activate virtual env
 
@@ -16,12 +18,11 @@ mac:
     source venv/bin/activate
 
 win:
-    venv\Scripts\activate
+    venv\scripts\activate
 
+# start the server / app
 
-
-# install flask
-python -m pip install flask
+py server.py
 
 ######################################
 ########## GIT COMMANDS ##############
@@ -34,8 +35,6 @@ git init
 
 # set the remote url
 git remote add origin <url>
-
-
 
 # local copy
 git add .
