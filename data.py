@@ -62,16 +62,6 @@ mock_data = [
     },
 
     {
-        "id": "7",
-        "title": "Resident Evil Village",
-        "genre": "Horror",
-        "console": "Xbox Series X",
-        "price": 15.00,
-        "stock": 5,
-        "image": "resent-evil-village.jpg"
-    },
-
-    {
         "id": "8",
         "title": "Kirby and the Forgotten Land",
         "genre": "Adventure",
@@ -96,7 +86,7 @@ mock_data = [
         "title": "Super Smash Bros Ultimate",
         "genre": "Fight",
         "console": "Nintendo Switch",
-        "price": 50.00,
+        "price": 15.00,
         "stock": 10,
         "image": "smash-bros-ultimate.jpg"
     },

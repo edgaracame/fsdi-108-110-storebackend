@@ -1,8 +1,10 @@
 from flask import Flask, request
+from bson import ObjectId
 from about import me
 from data import mock_data
-import json
+from config import db
 import random
+import json
 
 app = Flask("server")
 
@@ -34,59 +36,84 @@ def about_json():
     return json.dumps(me)  # parse the dictionary into a json string
 
 
+def fix_mongo_id(obj):
+    obj["id"] = str(obj["_id"])
+    del obj["_id"]
+    return obj
+
+
 @app.get("/api/products")
 def products():
-    return json.dumps(mock_data)
+    cursor = db.products.find({})
+    products = []
+    for c in cursor:
+        fix_mongo_id(c)
+        products.append(c)
+
+    return json.dumps(products)
 
 
 @app.post("/api/products")
 def save_product():
     product = request.get_json()
 
-    mock_data.append(product)
-    product["id"] = str(random.randint(1, 123456789))
+    db.products.insert_one(product)
+    fix_mongo_id(product)
 
     return json.dumps(product)
 
 
 @app.get("/api/products/<id>")
 def get_product_by_id(id):
-    for m in mock_data:
-        if(m["id"] == str(id)):
-            return json.dumps(m)
-    return "Not Found"
+    product = db.products.find_one({"_id": ObjectId(id)})
+    if not product:
+        return "Not Found"
+
+    fix_mongo_id(product)
+    return json.dumps(product)
+
+
+@app.get("/api/categories")
+def get_categories():
+    cursor = db.products.find({})
+    genres = []
+    for c in cursor:
+        if not c["genre"] in genres:
+            genres.append(c["genre"])
+
+    return json.dumps(genres)
 
 
 @app.get("/api/products_category/<category>")
 def get_products_by_category(category):
+    cursor = db.products.find({"genre": category})
     results = []
-    for m in mock_data:
-        if(m["genre"].lower() == str(category).lower()):
-            results.append(m)
+    for c in cursor:
+        fix_mongo_id(c)
+        results.append(c)
+
     return json.dumps(results)
 
 
 @app.get("/api/product_cheapest")
 def get_cheapest():
-    cheapest = mock_data[0]
-    for m in mock_data:
-        if(m["price"] < cheapest["price"]):
-            cheapest = m
-    return cheapest
+    cursor = db.products.find({})
+    cheapest = cursor[0]
+    for c in cursor:
+        if(c["price"] < cheapest["price"]):
+            cheapest = c
 
-
-@app.get("/api/categories")
-def get_categories():
-    genres = []
-    for m in mock_data:
-        if not m["genre"] in genres:
-            genres.append(m["genre"])
-    return json.dumps(genres)
+    fix_mongo_id(cheapest)
+    return json.dumps(cheapest)
 
 
 @app.get("/api/count_products")
 def get_products_count():
-    count = len(mock_data)
+    cursor = db.products.find({})
+    count = 0
+    for c in cursor:
+        count += 1
+
     return json.dumps(f"There are {count} products in the catalog")
 
 
