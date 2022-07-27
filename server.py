@@ -3,10 +3,11 @@ from bson import ObjectId
 from about import me
 from data import mock_data
 from config import db
-import random
+from flask_cors import CORS
 import json
 
 app = Flask("server")
+CORS(app)
 
 
 @app.get("/")
@@ -23,7 +24,9 @@ def test():
 def about():
     return "Edgar Antonio Castillo Medina"
 
-# API ENDPOINTS = PRODUCTS #
+####################################
+##### API ENDPOINTS = PRODUCTS #####
+####################################
 
 
 @app.get("/api/version")
